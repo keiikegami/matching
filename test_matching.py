@@ -4,7 +4,7 @@ Tests for matching algorithms.
 """
 from numpy.testing import assert_array_equal
 
-from matching import deferred_acceptance
+from deferred_acceptance import da2 as deferred_acceptance
 
 
 class TestDeferredAcceptance:
