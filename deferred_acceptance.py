@@ -1,38 +1,72 @@
 def da3(P,Q):
-    S=np.tile([-1],P.shape[0])
-    free=range(P.shape[0])
+    import sys
+    
+    if isinstance(Q, list) != True and isinstance(Q,np.ndarray) != True:
+        print "Input Error!!"
+        sys.exit()
+        
+    if isinstance(P, list):
+        P = np.array(P)
+        Q = np.array(Q)
+    elif isinstance(P, np.ndarray):
+        print "ndarray"
+    else:
+        print "Input Error!!"
+        sys.exit()
+    N=P.shape[0]
+    G=Q.shape[0]
+    S=np.tile([-1],N)
+    free=range(N)
     n=0
+    
     while free:
+        # print S
+        """
+        上のシャープを外すことで男性の婚約状況の一周ごとの推移を表示することができます
+        正しくない結果が返ってきている疑いのある時に様子を見るため使いましょう
+        """
         A=free.pop() 
         F=P[A,:][n]
-        if F not in S:
-            S[A]=F
-            n=0        #nをリセット
-        elif F==8:
-            S[A]=8
+        if F==G:
+            S[A]=G
         else:
-            for y in range(5):
-                if S[y]==F:
-                    M=y #MはFがいる場所のindex
-            for z in range(6):
-                if Q[F,:][z]==M:
-                    Z=z
-                if Q[F,:][z]==A:
-                    W=z
-                if Q[F,:][z]==5:
-                    V=z
-            if V<W and V<Z:
-                S[M]=-1
-                free.append(A)    
-                free.append(M)
-                n+=1
-            elif W<Z and W<V:
-                S[A]=F
-                S[M]=-1
-                free.append(M)
-                n+=1
-            elif Z<W and Z<V:
+            for J in range(N+1):   
+                if Q[F,:][J]==A:
+                    D=J
+                if Q[F,:][J]==N:
+                    E=J
+            if E<D:
                 free.append(A)
                 n+=1
-        if len(free)==0:
-            print S              
+            else:
+                if F not in S:
+                    S[A]=F
+                    n=0        
+                else:
+                    for y in range(N):
+                        if S[y]==F:
+                            M=y         
+                    for z in range(N+1):
+                        if Q[F,:][z]==M:
+                            Z=z
+                        if Q[F,:][z]==A:
+                            W=z
+                    if W<Z:
+                        S[A]=F
+                        S[M]=-1
+                        free.append(M)
+                        n+=1
+                    else:
+                        free.append(A)
+                        n+=1
+        if len(free)==0:   
+            s=list(S)
+            L=np.tile([N],G)
+            l=list(L)
+            for u in s:
+                if u==G: continue  
+                else:
+                    v=s.index(u)
+                    l[u]=v
+            return s,l
+        else: continue

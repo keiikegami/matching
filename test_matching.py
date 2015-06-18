@@ -2,6 +2,8 @@
 Tests for matching algorithms.
 
 """
+import numpy as np
+
 from numpy.testing import assert_array_equal
 
 from deferred_acceptance import da3 as deferred_acceptance
