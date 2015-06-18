@@ -1,59 +1,38 @@
-def da2(a,b):
-    S={}
-    free=[]
-    T={}
-    wfree=[]
-    for i in a:
-        free.append(i)
-    for i in b:
-        wfree.append(i)
-    c=len(free)
-    n=1
+def da3(P,Q):
+    S=np.tile([-1],P.shape[0])
+    free=range(P.shape[0])
+    n=0
     while free:
-        m=free.pop()
-        f=a[m][n]
-        if f not in S:
-            S[f]=m
+        A=free.pop() 
+        F=P[A,:][n]
+        if F not in S:
+            S[A]=F
+            n=0        #nをリセット
+        elif F==8:
+            S[A]=8
         else:
-            l=S[f]
-            for j in range(1,c+1):
-                if b[f][j]==m:
-                    d=j
-                else: continue
-            for k in range(1,c+1):
-                if b[f][k]==l:
-                    e=k
-                else: continue
-            if e<d:
-                free.append(m)
+            for y in range(5):
+                if S[y]==F:
+                    M=y #MはFがいる場所のindex
+            for z in range(6):
+                if Q[F,:][z]==M:
+                    Z=z
+                if Q[F,:][z]==A:
+                    W=z
+                if Q[F,:][z]==5:
+                    V=z
+            if V<W and V<Z:
+                S[M]=-1
+                free.append(A)    
+                free.append(M)
                 n+=1
-            else:
-                S[f]=m
-                free.append(l)
+            elif W<Z and W<V:
+                S[A]=F
+                S[M]=-1
+                free.append(M)
                 n+=1
-        if len(free)==0: continue
-    g=1
-    while wfree:
-        m=wfree.pop()
-        f=b[m][g]
-        if f not in T:
-            T[f]=m
-        else:
-            l=T[f]
-            for j in range(1,c+1):
-                if a[f][j]==m:
-                    d=j
-                else: continue
-            for k in range(1,c+1):
-                if a[f][k]==l:
-                    e=k
-                else: continue
-            if e<d:
-                wfree.append(m)
-                g+=1
-            else:
-                T[f]=m
-                wfree.append(l)
-                g+=1
-        if len(wfree)==0:
-            return S,T
+            elif Z<W and Z<V:
+                free.append(A)
+                n+=1
+        if len(free)==0:
+            print S              
