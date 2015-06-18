@@ -1,4 +1,5 @@
 def da3(P,Q):
+    import numpy as np
     import sys
     
     if isinstance(Q, list) != True and isinstance(Q,np.ndarray) != True:
@@ -20,15 +21,13 @@ def da3(P,Q):
     n=0
     
     while free:
-        # print S
-        """
-        上のシャープを外すことで男性の婚約状況の一周ごとの推移を表示することができます
-        正しくない結果が返ってきている疑いのある時に様子を見るため使いましょう
-        """
+        #print S
+        #print n
         A=free.pop() 
         F=P[A,:][n]
         if F==G:
             S[A]=G
+            n=0
         else:
             for J in range(N+1):   
                 if Q[F,:][J]==A:
@@ -55,7 +54,7 @@ def da3(P,Q):
                         S[A]=F
                         S[M]=-1
                         free.append(M)
-                        n+=1
+                        n=0
                     else:
                         free.append(A)
                         n+=1
