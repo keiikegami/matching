@@ -1,6 +1,8 @@
+#import time
 import numpy as np
-def deferred_acceptance(m_pref_input,f_pref_input,caps):
+def deferred_acceptance(m_pref_input,f_pref_input,caps=None):
     
+    #start = time.time()
     m_pref_array=np.array(m_pref_input)
     f_pref_array=np.array(f_pref_input)
     f_prefsort=np.argsort(f_pref_array)
@@ -27,34 +29,34 @@ def deferred_acceptance(m_pref_input,f_pref_input,caps):
     
     while len(free) > 0:
         applyman = free.pop()
-        print applyman
+        #print applyman
         apply_prefs=m_pref_array[applyman]
-        print apply_prefs
+        #print apply_prefs
        
         for prefered in apply_prefs:
-            print prefered
+            #print prefered
             if prefered == f_popu:
                 m_match[applyman]=f_popu
-                print m_match
+                #print m_match
                 break
             
             else:
                 prefered_pref = f_prefsort[prefered]
-                print prefered_pref
+                #print prefered_pref
                 rank_apply = prefered_pref[applyman]
                 rank_non_match = prefered_pref[m_popu]
                 
                 if rank_non_match > rank_apply:
                     prefered_accept = f_accept[prefered]
-                    print prefered_accept
+                    #print prefered_accept
                     
                     if len(prefered_accept) < caps[prefered]:
                         
                         if len(prefered_accept) == 0:
                             prefered_accept.append(applyman)
-                            print prefered_accept
+                            #print prefered_accept
                             m_match[applyman] = prefered
-                            print m_match
+                            #print m_match
                             break
                         
                 
@@ -63,17 +65,17 @@ def deferred_acceptance(m_pref_input,f_pref_input,caps):
                                 
                                 rank_already = prefered_pref[prefered_accept[i]]
                                 m_match[applyman] = prefered
-                                print m_match
+                                #print m_match
                                 
                                 if rank_already > rank_apply:
                                     prefered_accept.insert(i,applyman)
-                                    print prefered_accept
+                                    #print prefered_accept
                                     break
                                     
                                 else:
                                     if i == len(prefered_accept)-1:
                                         prefered_accept.append(applyman)
-                                        print prefered_accept
+                                        #print prefered_accept
                             break
                      
                  
@@ -86,13 +88,13 @@ def deferred_acceptance(m_pref_input,f_pref_input,caps):
                                 prefered_accept.insert(i,applyman)
                                 
                                 unmatch_man = prefered_accept.pop()
-                                print unmatch_man
+                                #print unmatch_man
                                 m_match[unmatch_man]=f_popu
                                 m_match[applyman] = prefered
-                                print m_match
+                                #print m_match
                                 free.append(unmatch_man)
-                                print free
-                                print prefered_accept
+                                #print free
+                                #print prefered_accept
                                 break
                                     
                                 
@@ -120,5 +122,14 @@ def deferred_acceptance(m_pref_input,f_pref_input,caps):
     indptr = np.cumsum(caps)
     l_indptr = list(indptr)
     l_indptr.insert(0,0)
+    
+    #end = time.time()
+    #lapse = end - start
 
-    return [list(m_match),f_match,l_indptr]
+    if caps == [1] * f_popu:
+        #print lapse
+        return [list(m_match),f_match]
+    
+    else:
+        #print lapse
+        return [list(m_match),f_match,l_indptr]
